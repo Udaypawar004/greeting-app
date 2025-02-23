@@ -1,47 +1,50 @@
 package com.greeting.app.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.greeting.app.service.GreetingService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/greet")
 public class GreetingController {
-    // mapes into object
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    ObjectMapper objectMapper = new ObjectMapper();
+    ObjectNode objectNode;
 
-    // get method to return json
-    @GetMapping
-    public String getGreet() throws JsonProcessingException {
-        Map<String, String> map = new HashMap<>();
-        map.put("message", "Hello from get method");
-        return objectMapper.writeValueAsString(map); // converts into json
+    GreetingController(){
+        objectNode = objectMapper.createObjectNode();
+        objectNode.put("name", "default_value");
     }
 
-    // post method to return json
-    @PostMapping
-    public String postGreet() throws JsonProcessingException {
-        Map<String, String> map = new HashMap<>();
-        map.put("message", "Hello from post method");
-        return objectMapper.writeValueAsString(map);
+    @Autowired
+    GreetingService greetingService;
+    //Get Mapping
+    @GetMapping(produces = "application/json")
+    public ResponseEntity<ObjectNode> sayHello(){
+        return ResponseEntity.ok(greetingService.myservice(objectNode));
     }
 
-    // put method to return json
-    @PutMapping
-    public String putGreet() throws JsonProcessingException {
-        Map<String, String> map = new HashMap<>();
-        map.put("message", "Hello from put method");
-        return objectMapper.writeValueAsString(map);
+    //Post Mapping
+    @PostMapping(produces = "application/json")
+    public ResponseEntity<ObjectNode> postHello(@RequestBody Map<String, String> newData) {
+        objectNode.put("name", newData.get("name"));
+        return ResponseEntity.ok(greetingService.myservice(objectNode));
     }
 
-    // delete method to return json
-    @DeleteMapping
-    public String deleteGreet() throws JsonProcessingException {
-        Map<String, String> map = new HashMap<>();
-        map.put("message", "Hello from delete method");
-        return objectMapper.writeValueAsString(map);
+    //Put Mapping
+    @PutMapping(produces = "application/json")
+    public ResponseEntity<ObjectNode> putHello(@RequestBody Map<String,String> newData){
+        objectNode.put("name", newData.get("name"));
+        return ResponseEntity.ok(greetingService.myservice(objectNode));
+    }
+
+    //Delete Mapping
+    @DeleteMapping(produces = "application/json")
+    public ResponseEntity<ObjectNode> deleteHello(@RequestBody Map<String,String> newData){
+        objectNode.remove("name");
+        return ResponseEntity.ok(greetingService.myservice(objectNode));
     }
 }
