@@ -55,6 +55,11 @@ public class GreetingService {
         }
     }
 
+    public ObjectNode editmyservice(GreetingDTO greetingDTO){
+        Greeting greeting = modelMapper.map(greetingDTO,Greeting.class);
+        return createGreetingObjectNode(greetingRepository.save(greeting));
+    }
+
     private ObjectNode createGreetingObjectNode(Greeting greeting) {
         ObjectNode objectNode = objectMapper.createObjectNode();
         objectNode.put("id", greeting.getId());
