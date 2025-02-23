@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/greet")
@@ -22,8 +23,13 @@ public class GreetingController {
     @Autowired
     GreetingService greetingService;
     //Get Mapping
-    @GetMapping(produces = "application/json")
-    public ResponseEntity<ObjectNode> sayHello(){
+    @GetMapping(value = {"/{Fname}", "/{Fname}/{Lname}"}, produces = "application/json")
+    public ResponseEntity<ObjectNode> sayHello(
+            @PathVariable(value = "Fname", required = false) Optional<String> Fname,
+            @PathVariable(value = "Lname", required = false) Optional<String> Lname){
+        ObjectNode objectNode = new ObjectMapper().createObjectNode();
+        Fname.ifPresent(value -> objectNode.put("Fname", value));
+        Lname.ifPresent(value -> objectNode.put("Lname", value));
         return ResponseEntity.ok(greetingService.myservice(objectNode));
     }
 
