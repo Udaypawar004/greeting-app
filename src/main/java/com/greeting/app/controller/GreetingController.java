@@ -15,8 +15,8 @@ public class GreetingController {
 
     //Get Mapping
     @GetMapping(produces = "application/json")
-    public ResponseEntity<ObjectNode> sayHello(@RequestBody GreetingDTO greetingDTO) {
-        return ResponseEntity.ok(greetingService.getmyservice(greetingDTO));
+    public ResponseEntity<ObjectNode> sayHello(@RequestParam Long id) {
+        return ResponseEntity.ok(greetingService.getmyservice(id));
     }
 
     //Post Mapping

@@ -1,7 +1,6 @@
 package com.greeting.app.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.greeting.app.dto.GreetingDTO;
 import com.greeting.app.entity.Greeting;
@@ -9,7 +8,6 @@ import com.greeting.app.repository.GreetingRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -34,25 +32,15 @@ public class GreetingService {
         return "removed ID";
     }
 
-    public ObjectNode getmyservice(GreetingDTO greetingDTO) {
-        Greeting greeting = modelMapper.map(greetingDTO, Greeting.class);
-        Optional<Greeting> savedGreeting = greetingRepository.findById(greeting.getId());
+    public ObjectNode getmyservice(Long id) {
+        Optional<Greeting> savedGreeting = greetingRepository.findById(id);
         if (savedGreeting.isPresent()) {
             return createGreetingObjectNode(savedGreeting.get());
         } else {
             ObjectNode errorNode = objectMapper.createObjectNode();
-            errorNode.put("error", "Greeting not found for id: " + greeting.getId());
+            errorNode.put("error", "Greeting not found for id: " + id);
             return errorNode;
         }
-    }
-
-    public ArrayNode getAllservice() {
-        List<Greeting> greetings = greetingRepository.findAll();
-        ArrayNode arrayNode = objectMapper.createArrayNode();
-        for (Greeting greeting : greetings) {
-            arrayNode.add(createGreetingObjectNode(greeting));
-        }
-        return arrayNode;
     }
 
     private ObjectNode createGreetingObjectNode(Greeting greeting) {
