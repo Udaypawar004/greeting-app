@@ -1,5 +1,6 @@
 package com.greeting.app.controller;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.greeting.app.dto.GreetingDTO;
 import com.greeting.app.service.GreetingService;
@@ -17,6 +18,12 @@ public class GreetingController {
     @GetMapping(produces = "application/json")
     public ResponseEntity<ObjectNode> sayHello(@RequestParam Long id) {
         return ResponseEntity.ok(greetingService.getmyservice(id));
+    }
+
+    //Get All
+    @GetMapping(value = "/all",produces = "application/json")
+    public ResponseEntity<ArrayNode> helloAll(){
+        return ResponseEntity.ok(greetingService.getAllservice());
     }
 
     //Post Mapping

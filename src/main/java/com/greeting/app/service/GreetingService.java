@@ -1,6 +1,7 @@
 package com.greeting.app.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.greeting.app.dto.GreetingDTO;
 import com.greeting.app.entity.Greeting;
@@ -8,6 +9,8 @@ import com.greeting.app.repository.GreetingRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,6 +27,15 @@ public class GreetingService {
         Greeting savedGreeting = greetingRepository.save(greeting);
         return createGreetingObjectNode(savedGreeting)
                 .put("used_service", "myservice");
+    }
+
+    public ArrayNode getAllservice() {
+        List<Greeting> greetingsFromRepo = greetingRepository.findAll();
+        ArrayNode arrayNodeForAllMSgs = objectMapper.createArrayNode();
+        for (Greeting greeting : greetingsFromRepo) {
+            arrayNodeForAllMSgs.add(createGreetingObjectNode(greeting));
+        }
+        return arrayNodeForAllMSgs;
     }
 
     public String deletemyservice(GreetingDTO greetingDTO){
